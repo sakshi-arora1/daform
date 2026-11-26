@@ -25,6 +25,9 @@ Add rows to the `editor` sheet of the site's block library (the sheet linked fro
   `https://main--{site}--{org}.aem.live`.
 - Block names are matched case-insensitively, with spaces, `-` and `_` treated alike. The first row per block wins.
 - Sites without `operator` rows are unaffected. Open canvas tabs pick up changes on reload.
+- The `inspector` contract is hosted by the Block Inspector in [`../block-editor`](../block-editor/README.md); add
+  `https://main--daform--sakshi-arora1.aem.live/tools/block-editor/block-editor.html` as a sidebar extension in the
+  `library` sheet.
 
 ## Interface
 
