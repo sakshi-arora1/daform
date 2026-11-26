@@ -161,6 +161,10 @@ export function decorateMain(main) {
  */
 async function loadEager(doc) {
   document.documentElement.lang = 'en';
+  // DA's Layout view (?quick-edit): form editing support, ready before the form block renders.
+  if (new URLSearchParams(window.location.search).has('quick-edit')) {
+    await import('../blocks/form/formeditor.js');
+  }
   decorateTemplateAndTheme();
   const main = doc.querySelector('main');
   if (main) {

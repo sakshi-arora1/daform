@@ -6,4 +6,5 @@ package.json
 package-lock.json
 test/*
 sync-block-collection.sh
+tools/block-operators/docs/*
 tools/block-editor/docs/*

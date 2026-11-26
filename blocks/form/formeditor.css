@@ -1,0 +1,6 @@
+/* DA Layout view: the item selected in the block operators' outline or Block Inspector */
+main .form .block-operator-selected {
+  outline: 2px solid #3b63fb;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
