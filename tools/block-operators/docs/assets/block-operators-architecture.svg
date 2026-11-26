@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1180 900" font-family="-apple-system, Segoe UI, Helvetica, Arial, sans-serif" font-size="13">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1180 744" font-family="-apple-system, Segoe UI, Helvetica, Arial, sans-serif" font-size="13">
   <defs>
     <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#444"/></marker>
     <marker id="g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#1a7f37"/></marker>
@@ -62,13 +62,13 @@
   <text x="68" y="428" class="s">nx2 styles via ctx.styles</text>
 
   <rect x="390" y="304" width="330" height="150" rx="6" class="ex"/>
-  <text x="402" y="326" class="t">WYSIWYG host</text>
-  <text x="402" y="344" class="s">ew-editor-wysiwyg · handleNodeSelect</text>
+  <text x="402" y="326" class="t">Operator host</text>
+  <text x="402" y="344" class="s">editor-utils/block-operators.js</text>
   <rect x="406" y="356" width="298" height="84" rx="6" class="op"/>
   <text x="418" y="378" class="t">resolve / locate (every operator)</text>
   <text x="418" y="396" class="s">editor position → item id</text>
   <text x="418" y="412" class="s">item id → editor position</text>
-  <text x="418" y="428" class="s">null → today's NodeSelection</text>
+  <text x="418" y="428" class="s">outline selection ↔ caret</text>
 
   <rect x="40" y="478" width="680" height="152" rx="6" class="ex"/>
   <text x="52" y="500" class="t">ProseMirror editor</text>
@@ -89,8 +89,8 @@
 
   <!-- Block Inspector -->
   <rect x="770" y="180" width="390" height="470" rx="8" class="grp"/>
-  <text x="784" y="203" class="h">Block Inspector (iframe extension)</text>
-  <text x="784" y="221" class="s">ew-extensions/tools/block-editor</text>
+  <text x="784" y="203" class="h">Block Inspector (site's copy)</text>
+  <text x="784" y="221" class="s">daform tools/block-editor (from ew-extensions)</text>
   <rect x="790" y="234" width="350" height="56" rx="6" class="ex"/>
   <text x="802" y="256" class="t">loadBlockLibrary → editor rows</text>
   <text x="802" y="276" class="s">library.js · today used for isMultiBlock</text>
@@ -113,38 +113,16 @@
   <text x="802" y="614" class="s">(MessageChannel)</text>
   <path d="M790 560 H722" class="w" marker-end="url(#g)"/>
 
-  <!-- Preview page -->
-  <rect x="20" y="676" width="1140" height="140" rx="8" class="grp"/>
-  <text x="34" y="699" class="h">Layout view (site page in an iframe, ?quick-edit) · no operator code runs here</text>
-  <text x="34" y="717" class="s">quick-edit plugin (unchanged) · the site's scripts and blocks render the page</text>
-  <rect x="40" y="730" width="400" height="72" rx="6" class="ex"/>
-  <text x="52" y="752" class="t">quick-edit (existing)</text>
-  <text x="52" y="770" class="s">block selection and inline editing</text>
-  <text x="52" y="786" class="s">SET_BODY → re-render page or one block</text>
-  <rect x="470" y="730" width="300" height="72" rx="6" class="new"/>
-  <text x="482" y="752" class="t">selection sync (site code)</text>
-  <text x="482" y="770" class="s">click in [data-item-id] → publish</text>
-  <text x="482" y="786" class="s">select message → highlight item</text>
-  <rect x="800" y="730" width="340" height="72" rx="6" class="new"/>
-  <text x="812" y="752" class="t">block markup in Layout (site code)</text>
-  <text x="812" y="770" class="s">data-item-id = operator item id</text>
-  <text x="812" y="786" class="s">data-item-prop = label.value, description, value</text>
-
-  <!-- host <-> preview -->
-  <path d="M555 630 V674" class="ln" marker-end="url(#a)" marker-start="url(#a)"/>
-  <text x="562" y="667" class="s">MessageChannel (MESSAGE_TYPES)</text>
-  <text x="292" y="667" class="s" text-anchor="end">postMessage · BroadcastChannel('block-operators')</text>
-
   <!-- Config → registries -->
   <path d="M590 138 V164 H300 V214" class="ln" marker-end="url(#a)"/>
   <path d="M590 164 H1110 V232" class="ln" marker-end="url(#a)"/>
 
   <!-- Legend -->
-  <rect x="20" y="832" width="1140" height="56" rx="8" fill="#fff" stroke="#d0d7de"/>
-  <rect x="36" y="850" width="30" height="18" rx="4" class="ex"/><text x="74" y="864">existing</text>
-  <rect x="150" y="850" width="30" height="18" rx="4" class="new"/><text x="188" y="864">new in DA / extension / site</text>
-  <rect x="440" y="850" width="30" height="18" rx="4" class="op"/><text x="478" y="864">operator code</text>
-  <path d="M580 859 H620" class="w" marker-end="url(#g)"/><text x="630" y="864">writes (only via commit)</text>
-  <path d="M800 859 H840" class="r" marker-end="url(#b)"/><text x="850" y="864">create / mount</text>
-  <path d="M960 859 H1000" class="ln" marker-end="url(#a)"/><text x="1010" y="864">reads / messages</text>
+  <rect x="20" y="676" width="1140" height="56" rx="8" fill="#fff" stroke="#d0d7de"/>
+  <rect x="36" y="694" width="30" height="18" rx="4" class="ex"/><text x="74" y="708">existing</text>
+  <rect x="150" y="694" width="30" height="18" rx="4" class="new"/><text x="188" y="708">new in da-live / site</text>
+  <rect x="440" y="694" width="30" height="18" rx="4" class="op"/><text x="478" y="708">operator code</text>
+  <path d="M580 703 H620" class="w" marker-end="url(#g)"/><text x="630" y="708">writes (only via commit)</text>
+  <path d="M800 703 H840" class="r" marker-end="url(#b)"/><text x="850" y="708">create / mount</text>
+  <path d="M960 703 H1000" class="ln" marker-end="url(#a)"/><text x="1010" y="708">reads / messages</text>
 </svg>
