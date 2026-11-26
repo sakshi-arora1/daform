@@ -16,12 +16,12 @@ the underlying block structure.
 Add the following URL as a sidebar extension in the `library` sheet of your
 organization or site configuration:
 
-`https://blockimg--ew-extensions--adobe-rnd.aem.live/tools/block-editor/block-editor.html`
+`https://main--daform--sakshi-arora1.preview.da.live/tools/block-editor/block-editor.html`
 
 Library sheet:
 | title | path | format | experience | icon | ref
 | --- | --- | --- | --- | --- | --- |
-| Block Inspector | https://main--ew-extensions--adobe-rnd.aem.live/tools/block-editor/block-editor.html | | | | |
+| Block Inspector | https://main--daform--sakshi-arora1.preview.da.live/tools/block-editor/block-editor.html | | | | |
 
 
 ## Configs
@@ -116,6 +116,44 @@ library index's `options` sheet:
 `Label=value` provides a display label and a stored value. If `=value` is omitted,
 the label itself is stored. These options are separate from the field labels in
 Library Metadata.
+
+### Operators
+
+A block operator is a JS module that can take over a block's authoring. Configure
+it in the block library index's `editor` sheet:
+
+| block | property | value |
+| --- | --- | --- |
+| form | operator | https://main--daform--sakshi-arora1.preview.da.live/tools/block-operators/form.js |
+
+- Block names are matched like `multi` (case-insensitive; spaces, `-` and `_` are
+  equivalent). The first `operator` row for a block wins.
+- A `value` starting with `/` resolves against the sidebar's own origin when it is served
+  from the same site (e.g. `main--{site}--{org}.preview.da.live`), otherwise against
+  `https://main--{site}--{org}.preview.da.live`. Module imports need CORS, which
+  `aem.live` and `aem.page` don't send.
+- The module is imported when a matching block is first selected, then cached.
+  **Retry loading library** reloads it.
+
+When the selected block's operator implements the `inspector` contract, the
+sidebar mounts it below the block name and variant picker, in place of the fields
+form and repeating items. If the operator has no `inspector`, its `matches()`
+returns false, or it fails to load, create, mount or update, the sidebar shows the
+usual form for that block.
+
+The sidebar backs the operator's `ctx` with the plugin SDK:
+
+| `ctx` | Backed by |
+| --- | --- |
+| `name`, `variant`, `blockIndex`, `html`, `editable`, `update()` | `subscribeLiveDocument`, narrowed to the selected block. `html` is the block's EDS markup. |
+| `styles` | The nx2 `form.css` and `buttons.css` sheets the sidebar already loads |
+| `commit(html)` | `sendHTML(html, { replace: true, expected })`. Resolves `{ ok: true }` or `{ ok: false, error, message }` with `NOT_EDITABLE`, `STALE`, `INVALID_HTML` (not exactly one block of the same name) or `NO_EDITOR`. |
+| `select(itemId)` | [Selection sync](../block-operators/README.md#selection-sync): posts the item to DA (whose outline moves the caret) and shares it with the Layout view. Resolves `{ ok: true }`, or `NOT_FOUND` when the operator can't `locate` the item. |
+| `onEditorSelect(cb)` | Selection sync messages for this block, from the outline or the Layout view; on load the sidebar asks DA for the current selection. `cb` fires when the item id changes. |
+| `surface` | `'inspector'` |
+
+See the [Block Operators interface](../block-operators/README.md)
+for the operator module contract.
 
 ## Using the sidebar
 

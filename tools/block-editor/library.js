@@ -1,5 +1,6 @@
 import { config as libraryConfig } from './config.js';
 import { normalizeBlockName, normalizeVariant, isMultiBlockConfigured } from './fields.js';
+import { getOperatorRegistry } from './operators.js';
 
 const libraries = new Map();
 const descriptions = new WeakMap();
@@ -159,6 +160,9 @@ export function loadBlockLibrary(org, site) {
 export const loadBlockOptions = async (org, site) => (await loadBlockLibrary(org, site)).options;
 export const isMultiBlock = async (org, site, name) => (
   isMultiBlockConfigured((await loadBlockLibrary(org, site)).editor, name)
+);
+export const loadBlockOperators = async (org, site) => (
+  getOperatorRegistry((await loadBlockLibrary(org, site)).editor, { org, site })
 );
 export const resetBlockLibraryCache = () => libraries.clear();
 export const resetBlockOptionsCache = resetBlockLibraryCache;
