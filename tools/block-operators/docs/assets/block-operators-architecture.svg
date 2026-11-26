@@ -1,128 +1,87 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1180 744" font-family="-apple-system, Segoe UI, Helvetica, Arial, sans-serif" font-size="13">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 770" font-family="-apple-system, Segoe UI, Helvetica, Arial, sans-serif" font-size="13">
   <defs>
     <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#444"/></marker>
-    <marker id="g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#1a7f37"/></marker>
-    <marker id="b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0969da"/></marker>
-    <style>
-      .t{font-weight:600;font-size:14px}
-      .h{font-weight:700;font-size:15px}
-      .s{fill:#555;font-size:11.5px}
-      .n{fill:#9a6700;font-size:11.5px}
-      .new{fill:#fff8c5;stroke:#bf8700;stroke-width:1.5;stroke-dasharray:5 3}
-      .ex{fill:#f6f8fa;stroke:#8c959f;stroke-width:1.2}
-      .grp{fill:#fff;stroke:#57606a;stroke-width:1.5}
-      .op{fill:#ddf4ff;stroke:#0969da;stroke-width:1.5}
-      .ln{stroke:#444;stroke-width:1.4;fill:none}
-      .w{stroke:#1a7f37;stroke-width:2;fill:none}
-      .r{stroke:#0969da;stroke-width:1.4;fill:none;stroke-dasharray:4 3}
-    </style>
+    <marker id="w" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0969da"/></marker>
   </defs>
-  <rect width="1180" height="900" fill="#fff"/>
-  <text x="20" y="30" class="h" font-size="18">Block Operators: architecture</text>
+  <rect width="1100" height="770" fill="#fff"/>
+  <text x="550" y="36" text-anchor="middle" font-size="20" font-weight="600">Block Operators: contracts</text>
 
   <!-- Configuration -->
-  <rect x="20" y="46" width="1140" height="106" rx="8" class="grp"/>
-  <text x="34" y="68" class="h">Configuration (per site)</text>
-  <rect x="40" y="80" width="330" height="58" rx="6" class="ex"/>
-  <text x="52" y="102" class="t">DA config · library sheet</text>
-  <text x="52" y="122" class="s">Blocks row → docs/library/blocks.json</text>
-  <rect x="410" y="80" width="360" height="58" rx="6" class="ex"/>
-  <text x="422" y="100" class="t">blocks.json · editor sheet</text>
-  <text x="422" y="117" class="s">cards | multi  (existing)</text>
-  <text x="422" y="132" class="n">&lt;block&gt; | operator | &lt;module URL&gt;  (new)</text>
-  <rect x="810" y="80" width="330" height="58" rx="6" class="op"/>
-  <text x="822" y="102" class="t">Operator modules</text>
-  <text x="822" y="122" class="s">daform/tools/block-operators/*.js</text>
-  <path d="M370 109 H408" class="ln" marker-end="url(#a)"/>
-  <path d="M770 109 H808" class="ln" marker-end="url(#a)"/>
+  <rect x="30" y="70" width="320" height="130" rx="8" fill="#f6f8fa" stroke="#8c959f"/>
+  <text x="46" y="96" font-weight="600">Configuration (per site)</text>
+  <text x="46" y="120" fill="#57606a">block library · editor sheet</text>
+  <text x="46" y="148" font-family="ui-monospace, Menlo, monospace" font-size="12">cards | multi  (existing)</text>
+  <rect x="40" y="160" width="300" height="28" rx="4" fill="#dafbe1" stroke="#1a7f37"/>
+  <text x="50" y="179" font-family="ui-monospace, Menlo, monospace" font-size="12">&lt;block&gt; | operator | &lt;module URL&gt;</text>
 
-  <!-- DA canvas -->
-  <rect x="20" y="180" width="720" height="470" rx="8" class="grp"/>
-  <text x="34" y="203" class="h">da.live canvas (da-live)</text>
+  <!-- Operator module -->
+  <rect x="410" y="70" width="660" height="130" rx="8" fill="#fbefff" stroke="#8250df" stroke-width="1.5"/>
+  <text x="426" y="96" font-weight="600">Block operator module</text>
+  <g font-family="ui-monospace, Menlo, monospace" font-size="12">
+    <text x="426" y="122">matches({ name, variant })   create(ctx) → instance</text>
+    <text x="426" y="146">instance: update(ctx) · destroy() · resolve(position) · locate(itemId)</text>
+    <text x="426" y="170">          outline.mount(container)   inspector.mount(container)</text>
+  </g>
+  <text x="426" y="191" fill="#57606a" font-size="12">both contracts optional · imported lazily · one instance per host</text>
 
-  <rect x="40" y="216" width="310" height="56" rx="6" class="ex"/>
-  <text x="52" y="238" class="t">loadBlockEditor(org, site)</text>
-  <text x="52" y="258" class="s">ew-panel-extensions/helpers.js · memoized</text>
-  <rect x="390" y="216" width="330" height="56" rx="6" class="new"/>
-  <text x="402" y="238" class="t">loadBlockOperators → registry</text>
-  <text x="402" y="258" class="s">block name → operator module</text>
-  <path d="M350 244 H388" class="ln" marker-end="url(#a)"/>
+  <line x1="350" y1="135" x2="406" y2="135" stroke="#444" stroke-width="1.5" marker-end="url(#a)"/>
+  <text x="378" y="126" text-anchor="middle" font-size="11" fill="#57606a">name →</text>
+  <text x="378" y="152" text-anchor="middle" font-size="11" fill="#57606a">module</text>
 
-  <text x="400" y="292" class="s" fill="#0969da">create(ctx) per block</text>
-  <path d="M555 272 V282 H195 V302" class="r" marker-end="url(#b)"/>
-  <path d="M555 282 V302" class="r" marker-end="url(#b)"/>
+  <!-- Hosts -->
+  <rect x="30" y="270" width="500" height="180" rx="8" fill="#f6f8fa" stroke="#8c959f"/>
+  <text x="46" y="296" font-weight="600">Outline (DA)</text>
+  <text x="46" y="318" fill="#57606a">block row · expand chevron</text>
+  <rect x="46" y="332" width="468" height="104" rx="6" fill="#dafbe1" stroke="#1a7f37" stroke-width="1.5"/>
+  <text x="60" y="356" font-weight="600">outline contract</text>
+  <text x="60" y="378" font-family="ui-monospace, Menlo, monospace" font-size="12">outline.mount(container)</text>
+  <text x="60" y="400">operator owns the nested tree: rendering, drag, menus</text>
+  <text x="60" y="422" fill="#57606a">not implemented → today's single row</text>
 
-  <rect x="40" y="304" width="310" height="150" rx="6" class="ex"/>
-  <text x="52" y="326" class="t">Outline</text>
-  <text x="52" y="344" class="s">ew-page-outline.js · section / block rows</text>
-  <rect x="56" y="356" width="278" height="84" rx="6" class="op"/>
-  <text x="68" y="378" class="t">outline.mount(container)</text>
-  <text x="68" y="396" class="s">operator-owned tree, drag, menus</text>
-  <text x="68" y="412" class="s">nested items of the block</text>
-  <text x="68" y="428" class="s">nx2 styles via ctx.styles</text>
+  <rect x="570" y="270" width="500" height="180" rx="8" fill="#f6f8fa" stroke="#8c959f"/>
+  <text x="586" y="296" font-weight="600">Block Inspector</text>
+  <text x="586" y="318" fill="#57606a">panel for the block under the caret</text>
+  <rect x="586" y="332" width="468" height="104" rx="6" fill="#dafbe1" stroke="#1a7f37" stroke-width="1.5"/>
+  <text x="600" y="356" font-weight="600">inspector contract</text>
+  <text x="600" y="378" font-family="ui-monospace, Menlo, monospace" font-size="12">inspector.mount(container)</text>
+  <text x="600" y="400">operator owns the panel, in place of the fields form</text>
+  <text x="600" y="422" fill="#57606a">not implemented / throws → today's fields form</text>
 
-  <rect x="390" y="304" width="330" height="150" rx="6" class="ex"/>
-  <text x="402" y="326" class="t">Operator host</text>
-  <text x="402" y="344" class="s">editor-utils/block-operators.js</text>
-  <rect x="406" y="356" width="298" height="84" rx="6" class="op"/>
-  <text x="418" y="378" class="t">resolve / locate (every operator)</text>
-  <text x="418" y="396" class="s">editor position → item id</text>
-  <text x="418" y="412" class="s">item id → editor position</text>
-  <text x="418" y="428" class="s">outline selection ↔ caret</text>
+  <line x1="600" y1="200" x2="280" y2="266" stroke="#444" stroke-width="1.5" marker-end="url(#a)"/>
+  <line x1="880" y1="200" x2="820" y2="266" stroke="#444" stroke-width="1.5" marker-end="url(#a)"/>
+  <text x="330" y="232" text-anchor="middle" font-size="12" fill="#57606a">create(ctx) · mount</text>
+  <text x="872" y="236" font-size="12" fill="#57606a">create(ctx) · mount</text>
 
-  <rect x="40" y="478" width="680" height="152" rx="6" class="ex"/>
-  <text x="52" y="500" class="t">ProseMirror editor</text>
-  <rect x="56" y="512" width="320" height="104" rx="6" class="new"/>
-  <text x="68" y="534" class="t">ctx.commit(html) by block index</text>
-  <text x="68" y="554" class="s">guards: editable · not stale</text>
-  <text x="68" y="570" class="s">· parses to one block, same name</text>
-  <text x="68" y="588" class="s">getBlockPositions → replaceBlockRange</text>
-  <text x="68" y="604" class="s">then editorHtmlState → update()</text>
-  <rect x="396" y="512" width="308" height="104" rx="6" class="ex"/>
-  <text x="408" y="534" class="t">Editor selection</text>
-  <text x="408" y="554" class="s">the sync point for all surfaces</text>
-  <text x="408" y="572" class="s">ctx.select / onEditorSelect</text>
-  <text x="408" y="590" class="s">caret ↔ item via locate / resolve</text>
+  <!-- ctx -->
+  <rect x="30" y="490" width="1040" height="66" rx="8" fill="#dafbe1" stroke="#1a7f37" stroke-width="1.5"/>
+  <text x="46" y="514" font-weight="600">ctx (same shape from both hosts)</text>
+  <text x="46" y="540" font-family="ui-monospace, Menlo, monospace" font-size="12">name · variant · html · blockIndex · editable · styles · commit(html) · select(itemId) · onEditorSelect(cb)</text>
+  <line x1="280" y1="450" x2="280" y2="486" stroke="#444" stroke-width="1.5" marker-end="url(#a)"/>
+  <line x1="820" y1="450" x2="820" y2="486" stroke="#444" stroke-width="1.5" marker-end="url(#a)"/>
 
-  <path d="M195 454 V510" class="w" marker-end="url(#g)"/>
-  <path d="M555 454 V510" class="ln" marker-end="url(#a)" marker-start="url(#a)"/>
+  <!-- Document -->
+  <rect x="30" y="596" width="1040" height="120" rx="8" fill="#f6f8fa" stroke="#8c959f"/>
+  <text x="46" y="620" font-weight="600">DA document (existing)</text>
+  <rect x="46" y="632" width="490" height="72" rx="6" fill="#fff" stroke="#8c959f"/>
+  <text x="60" y="654" font-weight="600">The operator's block</text>
+  <text x="60" y="674">commit(html) replaces only this block, as one change</text>
+  <text x="60" y="694" fill="#57606a" font-size="12">rejects: NOT_EDITABLE · STALE · INVALID_HTML · NO_EDITOR</text>
+  <rect x="564" y="632" width="490" height="72" rx="6" fill="#fff" stroke="#8c959f"/>
+  <text x="578" y="654" font-weight="600">Selection inside the block (existing canvas capability)</text>
+  <text x="578" y="674" font-family="ui-monospace, Menlo, monospace" font-size="12">position { row, cell, textOffset? }</text>
+  <text x="578" y="694" fill="#57606a" font-size="12">↔ item id via resolve / locate</text>
 
-  <!-- Block Inspector -->
-  <rect x="770" y="180" width="390" height="470" rx="8" class="grp"/>
-  <text x="784" y="203" class="h">Block Inspector (site's copy)</text>
-  <text x="784" y="221" class="s">daform tools/block-editor (from ew-extensions)</text>
-  <rect x="790" y="234" width="350" height="56" rx="6" class="ex"/>
-  <text x="802" y="256" class="t">loadBlockLibrary → editor rows</text>
-  <text x="802" y="276" class="s">library.js · today used for isMultiBlock</text>
-  <rect x="790" y="306" width="350" height="40" rx="6" class="new"/>
-  <text x="802" y="331" class="t">operator registry (same rows)</text>
-  <path d="M965 290 V304" class="ln" marker-end="url(#a)"/>
-  <rect x="790" y="362" width="350" height="84" rx="6" class="op"/>
-  <text x="802" y="384" class="t">inspector.mount(container)</text>
-  <text x="802" y="402" class="s">replaces the fields form for this block</text>
-  <text x="802" y="418" class="s">no operator / throws → fields form</text>
-  <path d="M965 346 V360" class="r" marker-end="url(#b)"/>
-  <rect x="790" y="462" width="350" height="168" rx="6" class="ex"/>
-  <text x="802" y="484" class="t">ctx over the plugin SDK</text>
-  <text x="802" y="504" class="s">html, update → subscribeLiveDocument</text>
-  <text x="802" y="522" class="s">editable → live document flag</text>
-  <text x="802" y="540" class="s">commit → sendHTML({ replace, expected })</text>
-  <text x="802" y="558" class="s">onEditorSelect → selection sync</text>
-  <text x="802" y="576" class="n">select → selection sync (site code)</text>
-  <text x="802" y="598" class="s">ew-panel-extensions/iframe-protocol.js</text>
-  <text x="802" y="614" class="s">(MessageChannel)</text>
-  <path d="M790 560 H722" class="w" marker-end="url(#g)"/>
-
-  <!-- Config → registries -->
-  <path d="M590 138 V164 H300 V214" class="ln" marker-end="url(#a)"/>
-  <path d="M590 164 H1110 V232" class="ln" marker-end="url(#a)"/>
+  <line x1="290" y1="556" x2="290" y2="628" stroke="#0969da" stroke-width="2" marker-end="url(#w)"/>
+  <text x="300" y="582" font-size="12" fill="#0969da">commit(html)</text>
+  <line x1="810" y1="560" x2="810" y2="628" stroke="#444" stroke-width="1.5" marker-start="url(#a)" marker-end="url(#a)"/>
+  <text x="820" y="582" font-size="12" fill="#57606a">select / onEditorSelect</text>
 
   <!-- Legend -->
-  <rect x="20" y="676" width="1140" height="56" rx="8" fill="#fff" stroke="#d0d7de"/>
-  <rect x="36" y="694" width="30" height="18" rx="4" class="ex"/><text x="74" y="708">existing</text>
-  <rect x="150" y="694" width="30" height="18" rx="4" class="new"/><text x="188" y="708">new in da-live / site</text>
-  <rect x="440" y="694" width="30" height="18" rx="4" class="op"/><text x="478" y="708">operator code</text>
-  <path d="M580 703 H620" class="w" marker-end="url(#g)"/><text x="630" y="708">writes (only via commit)</text>
-  <path d="M800 703 H840" class="r" marker-end="url(#b)"/><text x="850" y="708">create / mount</text>
-  <path d="M960 703 H1000" class="ln" marker-end="url(#a)"/><text x="1010" y="708">reads / messages</text>
+  <g font-size="12">
+    <rect x="30" y="738" width="16" height="12" fill="#f6f8fa" stroke="#8c959f"/><text x="52" y="749">existing</text>
+    <rect x="130" y="738" width="16" height="12" fill="#dafbe1" stroke="#1a7f37"/><text x="152" y="749">new contract</text>
+    <rect x="260" y="738" width="16" height="12" fill="#fbefff" stroke="#8250df"/><text x="282" y="749">operator code (site)</text>
+    <line x1="430" y1="744" x2="466" y2="744" stroke="#0969da" stroke-width="2" marker-end="url(#w)"/><text x="474" y="749">writes (only via commit)</text>
+    <line x1="640" y1="744" x2="676" y2="744" stroke="#444" stroke-width="1.5" marker-end="url(#a)"/><text x="684" y="749">creates / passes / syncs</text>
+  </g>
 </svg>
