@@ -1,0 +1,153 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1180 900" font-family="-apple-system, Segoe UI, Helvetica, Arial, sans-serif" font-size="13">
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#444"/></marker>
+    <marker id="g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#1a7f37"/></marker>
+    <marker id="b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0969da"/></marker>
+    <style>
+      .t{font-weight:600;font-size:14px}
+      .h{font-weight:700;font-size:15px}
+      .s{fill:#555;font-size:11.5px}
+      .n{fill:#9a6700;font-size:11.5px}
+      .new{fill:#fff8c5;stroke:#bf8700;stroke-width:1.5;stroke-dasharray:5 3}
+      .ex{fill:#f6f8fa;stroke:#8c959f;stroke-width:1.2}
+      .grp{fill:#fff;stroke:#57606a;stroke-width:1.5}
+      .op{fill:#ddf4ff;stroke:#0969da;stroke-width:1.5}
+      .ln{stroke:#444;stroke-width:1.4;fill:none}
+      .w{stroke:#1a7f37;stroke-width:2;fill:none}
+      .r{stroke:#0969da;stroke-width:1.4;fill:none;stroke-dasharray:4 3}
+    </style>
+  </defs>
+  <rect width="1180" height="900" fill="#fff"/>
+  <text x="20" y="30" class="h" font-size="18">Block Operators: architecture</text>
+
+  <!-- Configuration -->
+  <rect x="20" y="46" width="1140" height="106" rx="8" class="grp"/>
+  <text x="34" y="68" class="h">Configuration (per site)</text>
+  <rect x="40" y="80" width="330" height="58" rx="6" class="ex"/>
+  <text x="52" y="102" class="t">DA config · library sheet</text>
+  <text x="52" y="122" class="s">Blocks row → docs/library/blocks.json</text>
+  <rect x="410" y="80" width="360" height="58" rx="6" class="ex"/>
+  <text x="422" y="100" class="t">blocks.json · editor sheet</text>
+  <text x="422" y="117" class="s">cards | multi  (existing)</text>
+  <text x="422" y="132" class="n">&lt;block&gt; | operator | &lt;module URL&gt;  (new)</text>
+  <rect x="810" y="80" width="330" height="58" rx="6" class="op"/>
+  <text x="822" y="102" class="t">Operator modules</text>
+  <text x="822" y="122" class="s">daform/tools/block-operators/*.js</text>
+  <path d="M370 109 H408" class="ln" marker-end="url(#a)"/>
+  <path d="M770 109 H808" class="ln" marker-end="url(#a)"/>
+
+  <!-- DA canvas -->
+  <rect x="20" y="180" width="720" height="470" rx="8" class="grp"/>
+  <text x="34" y="203" class="h">da.live canvas (da-live)</text>
+
+  <rect x="40" y="216" width="310" height="56" rx="6" class="ex"/>
+  <text x="52" y="238" class="t">loadBlockEditor(org, site)</text>
+  <text x="52" y="258" class="s">ew-panel-extensions/helpers.js · memoized</text>
+  <rect x="390" y="216" width="330" height="56" rx="6" class="new"/>
+  <text x="402" y="238" class="t">loadBlockOperators → registry</text>
+  <text x="402" y="258" class="s">block name → operator module</text>
+  <path d="M350 244 H388" class="ln" marker-end="url(#a)"/>
+
+  <text x="400" y="292" class="s" fill="#0969da">create(ctx) per block</text>
+  <path d="M555 272 V282 H195 V302" class="r" marker-end="url(#b)"/>
+  <path d="M555 282 V302" class="r" marker-end="url(#b)"/>
+
+  <rect x="40" y="304" width="310" height="150" rx="6" class="ex"/>
+  <text x="52" y="326" class="t">Outline</text>
+  <text x="52" y="344" class="s">ew-page-outline.js · section / block rows</text>
+  <rect x="56" y="356" width="278" height="84" rx="6" class="op"/>
+  <text x="68" y="378" class="t">outline.mount(container)</text>
+  <text x="68" y="396" class="s">operator-owned tree, drag, menus</text>
+  <text x="68" y="412" class="s">nested items of the block</text>
+  <text x="68" y="428" class="s">nx2 styles via ctx.styles</text>
+
+  <rect x="390" y="304" width="330" height="150" rx="6" class="ex"/>
+  <text x="402" y="326" class="t">WYSIWYG host</text>
+  <text x="402" y="344" class="s">ew-editor-wysiwyg · handleNodeSelect</text>
+  <rect x="406" y="356" width="298" height="84" rx="6" class="op"/>
+  <text x="418" y="378" class="t">resolve / locate (every operator)</text>
+  <text x="418" y="396" class="s">editor position → item id</text>
+  <text x="418" y="412" class="s">item id → editor position</text>
+  <text x="418" y="428" class="s">null → today's NodeSelection</text>
+
+  <rect x="40" y="478" width="680" height="152" rx="6" class="ex"/>
+  <text x="52" y="500" class="t">ProseMirror editor</text>
+  <rect x="56" y="512" width="320" height="104" rx="6" class="new"/>
+  <text x="68" y="534" class="t">ctx.commit(html) by block index</text>
+  <text x="68" y="554" class="s">guards: editable · not stale</text>
+  <text x="68" y="570" class="s">· parses to one block, same name</text>
+  <text x="68" y="588" class="s">getBlockPositions → replaceBlockRange</text>
+  <text x="68" y="604" class="s">then editorHtmlState → update()</text>
+  <rect x="396" y="512" width="308" height="104" rx="6" class="ex"/>
+  <text x="408" y="534" class="t">Editor selection</text>
+  <text x="408" y="554" class="s">the sync point for all surfaces</text>
+  <text x="408" y="572" class="s">ctx.select / onEditorSelect</text>
+  <text x="408" y="590" class="s">→ SET_SELECTED_NODE to preview</text>
+
+  <path d="M195 454 V510" class="w" marker-end="url(#g)"/>
+  <path d="M555 454 V510" class="ln" marker-end="url(#a)" marker-start="url(#a)"/>
+
+  <!-- Block Inspector -->
+  <rect x="770" y="180" width="390" height="470" rx="8" class="grp"/>
+  <text x="784" y="203" class="h">Block Inspector (iframe extension)</text>
+  <text x="784" y="221" class="s">ew-extensions/tools/block-editor</text>
+  <rect x="790" y="234" width="350" height="56" rx="6" class="ex"/>
+  <text x="802" y="256" class="t">loadBlockLibrary → editor rows</text>
+  <text x="802" y="276" class="s">library.js · today used for isMultiBlock</text>
+  <rect x="790" y="306" width="350" height="40" rx="6" class="new"/>
+  <text x="802" y="331" class="t">operator registry (same rows)</text>
+  <path d="M965 290 V304" class="ln" marker-end="url(#a)"/>
+  <rect x="790" y="362" width="350" height="84" rx="6" class="op"/>
+  <text x="802" y="384" class="t">inspector.mount(container)</text>
+  <text x="802" y="402" class="s">replaces the fields form for this block</text>
+  <text x="802" y="418" class="s">no operator / throws → fields form</text>
+  <path d="M965 346 V360" class="r" marker-end="url(#b)"/>
+  <rect x="790" y="462" width="350" height="168" rx="6" class="ex"/>
+  <text x="802" y="484" class="t">ctx over the plugin SDK</text>
+  <text x="802" y="504" class="s">html, update → subscribeLiveDocument</text>
+  <text x="802" y="522" class="s">editable → live document flag</text>
+  <text x="802" y="540" class="s">commit → sendHTML({ replace, expected })</text>
+  <text x="802" y="558" class="s">onEditorSelect → live document selection</text>
+  <text x="802" y="576" class="n">select → new SDK action</text>
+  <text x="802" y="598" class="s">ew-panel-extensions/iframe-protocol.js</text>
+  <text x="802" y="614" class="s">(MessageChannel)</text>
+  <path d="M790 560 H722" class="w" marker-end="url(#g)"/>
+
+  <!-- Preview page -->
+  <rect x="20" y="676" width="1140" height="140" rx="8" class="grp"/>
+  <text x="34" y="699" class="h">WYSIWYG preview page (site page in an iframe, ?quick-edit)</text>
+  <text x="34" y="717" class="s">quick-edit plugin: da-nx nx/public/plugins/quick-edit · loads the site's scripts/aem.js and scripts.js</text>
+  <rect x="40" y="730" width="400" height="72" rx="6" class="ex"/>
+  <text x="52" y="752" class="t">quick-edit (existing)</text>
+  <text x="52" y="770" class="s">click → NODE_SELECT · SET_SELECTED_NODE → highlight</text>
+  <text x="52" y="786" class="s">SET_BODY → re-render page or one block</text>
+  <rect x="470" y="730" width="300" height="72" rx="6" class="new"/>
+  <text x="482" y="752" class="t">operator loader (new)</text>
+  <text x="482" y="770" class="s">SET_OPERATORS → import, create(ctx)</text>
+  <text x="482" y="786" class="s">re-mount after SET_BODY</text>
+  <rect x="800" y="730" width="340" height="72" rx="6" class="op"/>
+  <text x="812" y="752" class="t">canvas.mount(blockEl)</text>
+  <text x="812" y="768" class="s">overlays, in-canvas gestures</text>
+  <text x="812" y="783" class="n">commit → OPERATOR_COMMIT</text>
+  <text x="812" y="797" class="n">select → OPERATOR_SELECT</text>
+  <path d="M770 766 H798" class="r" marker-end="url(#b)"/>
+
+  <!-- host <-> preview -->
+  <path d="M555 630 V674" class="ln" marker-end="url(#a)" marker-start="url(#a)"/>
+  <text x="562" y="667" class="s">MessageChannel (MESSAGE_TYPES)</text>
+  <path d="M300 676 V632" class="w" marker-end="url(#g)"/>
+  <text x="292" y="667" class="s" fill="#1a7f37" text-anchor="end">OPERATOR_COMMIT</text>
+
+  <!-- Config → registries -->
+  <path d="M590 138 V164 H300 V214" class="ln" marker-end="url(#a)"/>
+  <path d="M590 164 H1110 V232" class="ln" marker-end="url(#a)"/>
+
+  <!-- Legend -->
+  <rect x="20" y="832" width="1140" height="56" rx="8" fill="#fff" stroke="#d0d7de"/>
+  <rect x="36" y="850" width="30" height="18" rx="4" class="ex"/><text x="74" y="864">existing</text>
+  <rect x="150" y="850" width="30" height="18" rx="4" class="new"/><text x="188" y="864">new in DA / extension / quick-edit</text>
+  <rect x="440" y="850" width="30" height="18" rx="4" class="op"/><text x="478" y="864">operator code</text>
+  <path d="M580 859 H620" class="w" marker-end="url(#g)"/><text x="630" y="864">writes (only via commit)</text>
+  <path d="M800 859 H840" class="r" marker-end="url(#b)"/><text x="850" y="864">create / mount</text>
+  <path d="M960 859 H1000" class="ln" marker-end="url(#a)"/><text x="1010" y="864">reads / messages</text>
+</svg>
