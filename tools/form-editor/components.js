@@ -34,6 +34,20 @@ const ALIASES = {
 };
 const FALLBACK = 'text-input';
 
+// The form itself has no component model; its sheet edits the form's title (the rest in JSON).
+export const FORM_COMPONENT = {
+  id: 'form',
+  title: 'Form',
+  template: null,
+  insertable: false,
+  fields: [
+    { component: 'tab', name: 'basic', label: 'Basic' },
+    {
+      component: 'text', name: 'title', label: 'Title', valueType: 'string',
+    },
+  ],
+};
+
 /* ---------- Loading ---------- */
 
 const cache = new Map();
@@ -135,7 +149,7 @@ const TOP_LEVEL = new Set([
   'name', 'dataRef', 'visible', 'enabled', 'readOnly', 'required', 'placeholder', 'default',
   'description', 'tooltip', 'pattern', 'minLength', 'maxLength', 'minimum', 'maximum', 'enum',
   'enumNames', 'minOccur', 'maxOccur', 'accept', 'maxFileSize', 'displayFormat', 'altText', 'type',
-  'value', 'buttonType', 'repeatable',
+  'value', 'buttonType', 'repeatable', 'title',
 ]);
 // Booleans stored inverted (the model's "Hide title" is `label.visible: false`).
 const INVERTED = new Set(['hideTitle']);

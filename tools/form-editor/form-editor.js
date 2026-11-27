@@ -10,8 +10,8 @@ import {
   readFormBlock, removeItem, samePath,
 } from './form-model.js';
 import {
-  componentFor, describeItem, isShown, loadComponents, newItem, readField, tabsOf, validateField,
-  writeField,
+  componentFor, describeItem, FORM_COMPONENT, isShown, loadComponents, newItem, readField, tabsOf,
+  validateField, writeField,
 } from './components.js';
 
 const ICONS = {
@@ -244,7 +244,7 @@ function onRowKey(e, path) {
   } else if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
     e.preventDefault();
     rows[index + (e.key === 'ArrowUp' ? -1 : 1)]?.focus();
-  } else if (e.key === 'Enter' && path.length) {
+  } else if (e.key === 'Enter') {
     e.preventDefault();
     // eslint-disable-next-line no-use-before-define
     openProperties(path);
@@ -309,18 +309,37 @@ function renderOutline() {
       // eslint-disable-next-line no-use-before-define
       render();
     },
+    ondblclick: () => {
+      // eslint-disable-next-line no-use-before-define
+      openProperties([]);
+    },
     onkeydown: (e) => onRowKey(e, []),
   }, [
     h('span', { class: 'fe-type', text: 'Form' }),
     h('span', { class: 'fe-label fe-form-title', text: plainText(model.title) || model.name || 'Untitled form' }),
     h('span', { class: 'fe-actions' }, h('button', {
-      type: 'button', class: 'fe-action fe-action-add', title: 'Insert at the end', 'aria-label': 'Insert at the end', icon: 'add', disabled: !state.live?.editable || state.busy, onclick: (e) => { e.stopPropagation(); openInsert([]); },
+      type: 'button',
+      class: 'fe-action fe-action-wrench',
+      title: 'Form properties',
+      'aria-label': 'Form properties',
+      icon: 'wrench',
+      tabIndex: -1,
+      onclick: (e) => {
+        e.stopPropagation();
+        // eslint-disable-next-line no-use-before-define
+        openProperties([]);
+      },
     })),
   ]);
   dragHandlers(root, [], model);
   const items = model.items.length
     ? renderItems(model.items, [])
-    : h('p', { class: 'fe-muted fe-empty', text: 'This form has no items yet. Use + to add one.' });
+    : h('div', { class: 'fe-empty' }, [
+      h('p', { class: 'fe-muted', text: 'This form has no items yet.' }),
+      h('button', {
+        type: 'button', class: 'nx-btn-primary', text: 'Add a component', disabled: !state.live?.editable || state.busy, onclick: () => openInsert([]),
+      }),
+    ]);
   return h('div', { class: 'fe-outline' }, [root, items]);
 }
 
@@ -335,6 +354,25 @@ function openProperties(path) {
   render();
 }
 
+// Replace the item at `path` with `next`; for the form ([]), its settings (its items stay).
+function replaceAt(model, path, next) {
+  if (!path.length) {
+    const { items } = model;
+    Object.keys(model).forEach((key) => { delete model[key]; });
+    Object.assign(model, next, { items });
+    return;
+  }
+  removeItem(model, path);
+  insertItem(model, path.slice(0, -1), next, path.at(-1));
+}
+
+// What a property sheet edits: an item, or the form's settings (without its items).
+function sheetValue(model, path) {
+  if (path.length) return itemAt(model, path);
+  const { items, ...settings } = model;
+  return settings;
+}
+
 function commitField(path, field, value) {
   const error = validateField(field, value);
   if (error) {
@@ -345,11 +383,10 @@ function commitField(path, field, value) {
   }
   state.fieldErrors.delete(field.name);
   edit((model) => {
-    const item = itemAt(model, path);
+    const item = sheetValue(model, path);
     const next = writeField(item, field, value);
     if (JSON.stringify(next) === JSON.stringify(item)) return false;
-    removeItem(model, path);
-    insertItem(model, path.slice(0, -1), next, path.at(-1));
+    replaceAt(model, path, next);
     return undefined;
   });
 }
@@ -455,13 +492,12 @@ function renderJson(item, path, disabled) {
     }
     state.jsonDraft = undefined;
     edit((model) => {
-      removeItem(model, path);
-      insertItem(model, path.slice(0, -1), next, path.at(-1));
+      replaceAt(model, path, next);
       return undefined;
     });
   };
   return h('div', { class: 'fe-field', 'data-key': 'field::json' }, [
-    h('label', { for: 'fe-json', class: 'fe-field-label', text: 'JSON of this item' }),
+    h('label', { for: 'fe-json', class: 'fe-field-label', text: path.length ? 'JSON of this item' : 'JSON of the form settings (its items are kept)' }),
     textarea,
     disabled ? null : h('div', { class: 'fe-buttons' }, [
       h('button', {
@@ -483,12 +519,12 @@ function renderJson(item, path, disabled) {
 
 function renderProperties() {
   const path = state.selected;
-  const item = path?.length ? itemAt(state.form.model, path) : null;
+  const item = path ? sheetValue(state.form.model, path) : null;
   if (!item) {
     state.view = 'outline';
     return renderOutline();
   }
-  const component = componentFor(item, state.components);
+  const component = path.length ? componentFor(item, state.components) : FORM_COMPONENT;
   const fields = component?.fields ?? [];
   const tabs = [...tabsOf(fields), { label: 'JSON', json: true }];
   state.tab = Math.min(state.tab, tabs.length - 1);
@@ -515,7 +551,7 @@ function renderProperties() {
       }),
       h('div', {}, [
         h('h2', { text: component?.title ?? item.fieldType ?? 'Item' }),
-        h('p', { class: 'fe-muted', text: describeItem(item, state.components).label }),
+        h('p', { class: 'fe-muted', text: path.length ? describeItem(item, state.components).label : plainText(item.title) }),
       ]),
     ]),
     h('div', { class: 'fe-tabs', role: 'tablist' }, tabs.map((t, i) => h('button', {

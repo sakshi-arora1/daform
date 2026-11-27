@@ -17,10 +17,11 @@ Reload the editor, open **Form Editor** from the sidebar, and place the cursor i
 ## Outline
 
 - One row per item: its component (small, gray) and its label. Panels show their items indented
-  under a guide line. The top row is the form and its title.
+  under a guide line. The top row is the form and its title; its only action, the wrench, opens the
+  form's properties (its title, and its settings as JSON; the items are kept).
 - Hover a row (or select it) for its actions:
   - **+** opens the component list and inserts the chosen component after the item, or at the end
-    of a panel (on a panel's row) or of the form (on the form's row).
+    of a panel (on a panel's row). An empty form shows **Add a component** instead.
   - **Duplicate** inserts a copy after the item, with new names (and ids) for it and its items.
   - **Wrench** opens the item's property sheet (also: double-click, or Enter).
   - **Dustbin** deletes the item (also: Delete).
