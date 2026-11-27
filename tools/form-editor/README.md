@@ -30,6 +30,9 @@ Reload the editor, open **Form Editor** from the sidebar, and place the cursor i
 
 ## Property sheet
 
+A breadcrumb above the sheet shows where the item sits (form › panels › item); click the form or a
+panel in it to open that one's properties.
+
 Built from the component models in `blocks/form/models/form-components` (`...` references into
 `form-common` are resolved): the model's tabs (Basic, Validation, Help Content, …), its fields and
 their conditions, plus a **JSON** tab for the item as a whole. Changes are saved as soon as a field

@@ -517,6 +517,29 @@ function renderJson(item, path, disabled) {
   ]);
 }
 
+// Form › Panel › … › this item: each ancestor opens its own property sheet.
+function renderBreadcrumb(path) {
+  const { model } = state.form;
+  const crumbs = [{ path: [], label: plainText(model.title) || 'Form' }];
+  path.forEach((index, depth) => {
+    const at = path.slice(0, depth + 1);
+    crumbs.push({ path: at, label: describeItem(itemAt(model, at), state.components).label || '(untitled)' });
+  });
+  const items = crumbs.map((crumb, i) => {
+    const current = i === crumbs.length - 1;
+    return h('li', {}, current
+      ? h('span', { class: 'fe-crumb-current', 'aria-current': 'location', text: crumb.label })
+      : h('button', {
+        type: 'button',
+        class: 'fe-crumb',
+        text: crumb.label,
+        title: crumb.label,
+        onclick: () => openProperties(crumb.path),
+      }));
+  });
+  return h('nav', { class: 'fe-breadcrumb', 'aria-label': 'Hierarchy' }, h('ol', {}, items));
+}
+
 function renderProperties() {
   const path = state.selected;
   const item = path ? sheetValue(state.form.model, path) : null;
@@ -536,6 +559,8 @@ function renderProperties() {
       .filter((field) => isShown(field, item, fields))
       .map((field) => renderField(field, item, path, disabled));
   return h('div', { class: 'fe-properties' }, [
+    // eslint-disable-next-line no-use-before-define
+    renderBreadcrumb(path),
     h('div', { class: 'fe-props-head' }, [
       h('button', {
         type: 'button',
