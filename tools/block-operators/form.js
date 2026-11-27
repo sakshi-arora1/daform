@@ -7,7 +7,7 @@
  * Contracts: resolve, locate, outline and inspector. See README.md.
  */
 import {
-  addSurface, commitHtml, createState, moveEntry, mountShadow, parseBlock, plainText, renderTree,
+  addSurface, commitHtml, createState, moveEntry, mountInto, parseBlock, plainText, renderTree,
 } from './shared.js';
 import { createModelInspector, INSPECTOR_CSS } from './form-inspector.js';
 import { formItemIds } from '../../scripts/block-operator-sync.js';
@@ -288,7 +288,7 @@ export default {
 
       outline: {
         mount(container) {
-          const { root, remove } = mountShadow(container);
+          const { root, remove } = mountInto(container);
           let focusId = null;
           let status;
 
@@ -330,10 +330,7 @@ export default {
 
       inspector: {
         mount(container) {
-          const view = container.ownerDocument.defaultView;
-          const sheet = new view.CSSStyleSheet();
-          sheet.replaceSync(INSPECTOR_CSS);
-          const { root, remove } = mountShadow(container, [sheet]);
+          const { root, remove } = mountInto(container, [INSPECTOR_CSS]);
           const inspector = createModelInspector(root, {
             getItem: () => {
               const pointer = state.selectedId != null ? pointerOf(state.selectedId) : null;

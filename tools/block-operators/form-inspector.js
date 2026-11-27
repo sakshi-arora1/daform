@@ -423,7 +423,7 @@ export function createModelInspector(root, opts) {
       });
     }
 
-    const focused = root.activeElement?.closest?.('[data-key]')?.dataset.key;
+    const focused = root.getRootNode().activeElement?.closest?.('[data-key]')?.dataset.key;
     const disabled = !opts.editable();
     const { model } = view;
     const tabs = model ? tabsOf(model.fields) : [];

@@ -49,3 +49,17 @@ test('edit opens the Block Inspector, and falls back without openPanel', () => {
   assert.equal(operator.create(ctx()).edit(), false);
   assert.equal(operator.create(ctx({ openPanel: () => false })).edit(), false);
 });
+
+test('outline renders directly into the container, without a shadow root', () => {
+  const container = document.createElement('div');
+  document.body.append(container);
+  const instance = operator.create(ctx({ surface: undefined }));
+  const handle = instance.outline.mount(container);
+  const mount = container.querySelector(':scope > .block-operator');
+  assert.ok(mount);
+  assert.equal(mount.shadowRoot, null);
+  assert.ok(mount.querySelector('[data-id="email"]'));
+  handle.unmount();
+  assert.equal(container.children.length, 0);
+  instance.destroy();
+});

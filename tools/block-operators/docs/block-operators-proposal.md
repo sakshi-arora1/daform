@@ -20,8 +20,9 @@ Inside a contract's surface, the operator owns everything: rendering, drag and d
 actions. The host provides only a mount point and `ctx`.
 - Drag and drop stays inside the mount. Operators don't accept drops from outside, and the host ignores drag events
   from inside a mount.
-- Operators use the nx2 styles (`nx2/styles/form.css`, `nx2/styles/buttons.css`) that the host surface already loads,
-  e.g. by adopting the mount's root node `adoptedStyleSheets`; the host passes no styles.
+- Operators render directly into the mount container, so the nx2 styles (`nx2/styles/form.css`,
+  `nx2/styles/buttons.css`) the host surface already loads apply as is; the host passes no styles. An operator's own
+  CSS must be scoped to its mount.
 - `ctx.commit(html)` is the only way to change the document, and it can only replace the operator's own block.
 
 **Selection** leverages DA's existing selection inside a block: the caret or text selection in the canvas already

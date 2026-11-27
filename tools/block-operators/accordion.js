@@ -4,7 +4,7 @@
  * See README.md.
  */
 import {
-  addSurface, commitHtml, createState, moveEntry, mountShadow, parseBlock, renderTree,
+  addSurface, commitHtml, createState, moveEntry, mountInto, parseBlock, renderTree,
 } from './shared.js';
 
 function rowsOf(block) {
@@ -73,7 +73,7 @@ export default {
 
       outline: {
         mount(container) {
-          const { root, remove } = mountShadow(container);
+          const { root, remove } = mountInto(container);
           let focusId = null;
           let status;
 

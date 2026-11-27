@@ -9,7 +9,7 @@ in DA through optional **contracts**. Background and host design:
 | `accordion.js` | `https://main--daform--sakshi-arora1.preview.da.live/tools/block-operators/accordion.js` | `resolve`, `locate`, `outline` |
 | `form.js` | `https://main--daform--sakshi-arora1.preview.da.live/tools/block-operators/form.js` | `resolve`, `locate`, `outline`, `inspector` |
 
-`shared.js` holds helpers used by both (outline tree, shadow mount, commit).
+`shared.js` holds helpers used by both (outline tree, direct mount with scoped CSS, commit).
 
 ## Configuration
 
@@ -72,7 +72,7 @@ ctx = {
 DA and the Block Inspector each create their own instance. In DA, `select` moves the caret through `locate`, and
 `onEditorSelect` reports the caret through `resolve`; the surfaces share the selected item through
 [selection sync](#selection-sync). `ctx.commit` is the only way to change the document and
-replaces only the operator's own block. Operator UI is mounted in a shadow root that reuses the host surface's adopted sheets (nx2 form and buttons); drag and drop
+replaces only the operator's own block. Operator UI renders directly into the mount container, so the host surface's sheets (nx2 form and buttons) apply; the operators' own CSS is added to the host's root once, scoped under `.block-operator`; drag and drop
 stays inside the mount.
 
 Hook points (DA only; without them DA behaves as before):

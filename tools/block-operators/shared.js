@@ -5,7 +5,7 @@
 import { registerOutline } from '../../scripts/block-operator-sync.js';
 
 const TREE_CSS = `
-:host { display: block; font: inherit; }
+& { display: block; font: inherit; }
 .bo-tree, .bo-tree ul { list-style: none; margin: 0; padding: 0; }
 .bo-tree ul { padding-inline-start: 16px; }
 .bo-node {
@@ -74,27 +74,52 @@ export function createElement(doc, tag, props = {}, children = []) {
   return node;
 }
 
+// Operator sheets added to a host root (Document or ShadowRoot), with a use count each.
+const addedSheets = new WeakMap();
+
+function adoptSheet(rootNode, cssText) {
+  const view = (rootNode.ownerDocument || rootNode).defaultView;
+  const byCss = addedSheets.get(rootNode) ?? new Map();
+  addedSheets.set(rootNode, byCss);
+  let entry = byCss.get(cssText);
+  if (!entry) {
+    const sheet = new view.CSSStyleSheet();
+    // Scope every rule to the operator's mount, so nothing leaks into the host surface.
+    sheet.replaceSync(`.block-operator { ${cssText} }`);
+    entry = { sheet, count: 0 };
+    byCss.set(cssText, entry);
+    rootNode.adoptedStyleSheets = [...rootNode.adoptedStyleSheets, sheet];
+  }
+  entry.count += 1;
+  return () => {
+    entry.count -= 1;
+    if (entry.count > 0) return;
+    byCss.delete(cssText);
+    rootNode.adoptedStyleSheets = rootNode.adoptedStyleSheets.filter((s) => s !== entry.sheet);
+  };
+}
+
 /**
- * Open a shadow root inside `container` that adopts the sheets of the surface it is mounted in
- * plus the operators' own sheet. Returns `{ root, remove }`.
+ * Render directly into `container` (no shadow root): the host surface's own sheets (nx2 form and
+ * buttons) apply as is, and the operators' CSS (`css` strings plus the tree CSS) is added once to
+ * the host's root, scoped under `.block-operator`. Returns `{ root, remove }`; `root` is the
+ * operator's element.
  */
-export function mountShadow(container, styles = []) {
+export function mountInto(container, css = []) {
   const doc = container.ownerDocument;
-  const view = doc.defaultView;
-  const host = doc.createElement('div');
-  host.className = 'block-operator';
-  container.append(host);
-  // Reuse the sheets the host surface already adopted (DA's outline and the Block Inspector
-  // both load the nx2 form/buttons sheets), so nothing is loaded again.
-  const inherited = container.getRootNode().adoptedStyleSheets || [];
-  const root = host.attachShadow({ mode: 'open' });
-  const own = new view.CSSStyleSheet();
-  own.replaceSync(TREE_CSS);
-  // Sheets constructed in another document can't be adopted here; skip them.
-  const adoptable = [...new Set([...inherited, ...(styles || [])])]
-    .filter((sheet) => sheet instanceof view.CSSStyleSheet);
-  root.adoptedStyleSheets = [...adoptable, own];
-  return { root, remove: () => host.remove() };
+  const root = doc.createElement('div');
+  root.className = 'block-operator';
+  container.append(root);
+  const rootNode = container.getRootNode();
+  const releases = 'adoptedStyleSheets' in rootNode
+    ? [TREE_CSS, ...css].map((text) => adoptSheet(rootNode, text)) : [];
+  return {
+    root,
+    remove: () => {
+      root.remove();
+      releases.forEach((release) => release());
+    },
+  };
 }
 
 /** Commit through ctx; reports a failure in `status` (an element) and returns the result. */
@@ -118,13 +143,13 @@ export async function commitHtml(ctx, html, status) {
 }
 
 /**
- * Render an outline tree into `root` (a shadow root or element).
+ * Render an outline tree into `root` (the operator's element).
  * nodes: [{ id, label, meta?, children? }]. Reordering is limited to siblings.
  * opts: { selectedId, focusId, editable, onSelect(id), onMove(id, toIndex), onDelete(id) }
  * Returns the status element.
  */
 export function renderTree(root, nodes, opts) {
-  const doc = root.ownerDocument || root;
+  const doc = root.ownerDocument;
   const {
     selectedId, focusId, editable, onSelect, onMove, onDelete,
   } = opts;
