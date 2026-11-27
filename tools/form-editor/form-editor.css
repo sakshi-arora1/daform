@@ -1,0 +1,382 @@
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  background: var(--s2-gray-25, #fff);
+  color: var(--s2-gray-900, #131313);
+  font-family: var(--s2-font-family, adobe-clean, 'Source Sans Pro', sans-serif);
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+#app {
+  box-sizing: border-box;
+  height: 100vh;
+  overflow-y: auto;
+  padding: 8px 8px 24px;
+}
+
+h2 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.fe-muted,
+.fe-help {
+  margin: 0;
+  color: var(--s2-gray-600, #8f8f8f);
+  font-size: 12px;
+}
+
+.fe-empty,
+.fe-hint {
+  padding: 16px 8px;
+}
+
+.fe-hint h2 {
+  margin-bottom: 4px;
+}
+
+.fe-status {
+  margin: 0 0 8px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  background: var(--s2-red-100, #ffebe7);
+  color: var(--s2-red-900, #b40000);
+  font-size: 12px;
+}
+
+.fe-status.fe-info {
+  background: var(--s2-gray-100, #e9e9e9);
+  color: var(--s2-gray-800, #464646);
+}
+
+.fe-error {
+  margin: 0;
+  color: var(--s2-red-900, #b40000);
+  font-size: 12px;
+}
+
+/* ---------- Outline ---------- */
+
+.fe-tree {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.fe-tree .fe-tree {
+  margin-left: 14px;
+  padding-left: 8px;
+  border-left: 1px solid var(--s2-gray-200, #e1e1e1);
+}
+
+.fe-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 30px;
+  padding: 0 4px 0 2px;
+  border-radius: 6px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.fe-row:hover {
+  background: var(--s2-gray-75, #f3f3f3);
+}
+
+.fe-row:focus-visible {
+  outline: 2px solid var(--s2-blue-800, #3b63fb);
+  outline-offset: -2px;
+}
+
+.fe-row.is-selected {
+  background: var(--s2-blue-100, #e5f0fe);
+}
+
+.fe-row.is-dragging {
+  opacity: 0.5;
+}
+
+.fe-row.is-drop-before {
+  box-shadow: inset 0 2px 0 var(--s2-blue-800, #3b63fb);
+}
+
+.fe-row.is-drop-after {
+  box-shadow: inset 0 -2px 0 var(--s2-blue-800, #3b63fb);
+}
+
+.fe-row.is-drop-inside {
+  outline: 2px solid var(--s2-blue-800, #3b63fb);
+  outline-offset: -2px;
+}
+
+.fe-root {
+  margin-bottom: 4px;
+  padding-left: 8px;
+  background: var(--s2-gray-75, #f3f3f3);
+}
+
+.fe-grip {
+  flex: none;
+  width: 12px;
+  color: var(--s2-gray-400, #c6c6c6);
+  font-size: 11px;
+  letter-spacing: -2px;
+  cursor: grab;
+}
+
+.fe-type {
+  flex: none;
+  color: var(--s2-gray-600, #8f8f8f);
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.fe-label {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fe-form-title {
+  color: var(--s2-blue-900, #274dea);
+  font-weight: 600;
+}
+
+.fe-actions {
+  display: flex;
+  flex: none;
+  gap: 2px;
+  visibility: hidden;
+}
+
+.fe-row:hover .fe-actions,
+.fe-row:focus-within .fe-actions,
+.fe-row.is-selected .fe-actions {
+  visibility: visible;
+}
+
+.fe-action,
+.fe-back {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: none;
+  border-radius: 6px;
+  background: none;
+  color: var(--s2-gray-700, #6d6d6d);
+  cursor: pointer;
+}
+
+.fe-action svg,
+.fe-back svg {
+  width: 16px;
+  height: 16px;
+}
+
+.fe-action:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.fe-action:hover:not(:disabled),
+.fe-back:hover {
+  background: var(--s2-gray-200, #e1e1e1);
+  color: var(--s2-gray-900, #131313);
+}
+
+.fe-action-delete:hover:not(:disabled) {
+  color: var(--s2-red-900, #b40000);
+}
+
+
+/* ---------- Property sheet ---------- */
+
+.fe-props-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  padding: 4px 4px 8px 0;
+}
+
+.fe-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  border-bottom: 1px solid var(--s2-gray-100, #e9e9e9);
+}
+
+.fe-tab {
+  padding: 6px 0 4px;
+  border: none;
+  border-bottom: 2px solid transparent;
+  background: none;
+  color: var(--s2-gray-700, #6d6d6d);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.fe-tab.is-selected {
+  border-bottom-color: var(--s2-gray-800, #464646);
+  color: var(--s2-gray-900, #131313);
+  font-weight: 700;
+}
+
+.fe-props-body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 12px 0 24px;
+}
+
+.fe-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.fe-field-label {
+  color: var(--s2-gray-700, #6d6d6d);
+  font-size: 12px;
+}
+
+.fe-required {
+  margin-left: 2px;
+}
+
+.fe-field input[type='text'],
+.fe-field input[type='number'],
+.fe-field input[type='date'],
+.fe-field select,
+.fe-field textarea {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 32px;
+  padding: 5px 10px;
+  border: 2px solid var(--s2-gray-300, #dadada);
+  border-radius: 8px;
+  background: var(--s2-gray-25, #fff);
+  font: inherit;
+}
+
+.fe-field textarea {
+  min-height: 72px;
+  resize: vertical;
+}
+
+.fe-field textarea.fe-code {
+  min-height: 24em;
+  font-family: 'Source Code Pro', Menlo, monospace;
+  font-size: 12px;
+  white-space: pre;
+}
+
+.fe-check input {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+}
+
+.fe-field.has-error input,
+.fe-field.has-error select,
+.fe-field.has-error textarea {
+  border-color: var(--s2-red-900, #b40000);
+}
+
+.fe-check label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+
+.fe-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+/* ---------- Insert dialog ---------- */
+
+#insert-dialog {
+  width: min(360px, calc(100vw - 24px));
+  max-height: calc(100vh - 48px);
+  padding: 0;
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgb(0 0 0 / 25%);
+}
+
+#insert-dialog::backdrop {
+  background: rgb(0 0 0 / 30%);
+}
+
+.fe-dialog {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: calc(100vh - 48px);
+  padding: 16px;
+  box-sizing: border-box;
+}
+
+.fe-search {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 32px;
+  padding: 5px 10px;
+  border: 2px solid var(--s2-gray-300, #dadada);
+  border-radius: 8px;
+  font: inherit;
+}
+
+.fe-components {
+  flex: 1;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  list-style: none;
+}
+
+.fe-component {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  padding: 8px;
+  border: none;
+  border-radius: 6px;
+  background: none;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.fe-component:hover,
+.fe-component:focus-visible {
+  background: var(--s2-gray-75, #f3f3f3);
+}
+
+.fe-component-id {
+  color: var(--s2-gray-600, #8f8f8f);
+  font-size: 11px;
+}
+
+.fe-dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+}
