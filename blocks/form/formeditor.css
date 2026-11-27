@@ -1,5 +1,13 @@
-/* DA Layout view: the item selected in the block operators' outline or Block Inspector */
-main .form .block-operator-selected {
+/* DA Layout view: hover, like quick-edit's image hover (innermost item only) */
+main .form [data-item-id]:hover:not(:has([data-item-id]:hover)) {
+  outline: 1px solid var(--s2-blue-600, #3b63fb);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* DA Layout view: the selected item */
+main .form .block-operator-selected,
+main .form .block-operator-selected:hover {
   outline: 2px solid #3b63fb;
   outline-offset: 2px;
   border-radius: 4px;
