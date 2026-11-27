@@ -12,7 +12,7 @@ const TREE_CSS = `
   border-inline-start: 1px solid var(--s2-gray-300, #dadada);
 }
 .bo-node, .bo-head {
-  display: flex; align-items: baseline; gap: 8px; min-height: 36px; padding: 6px 8px;
+  display: flex; align-items: baseline; gap: 8px; min-height: 30px; padding: 3px 8px;
   border-radius: 8px; box-sizing: border-box; user-select: none;
 }
 .bo-node { cursor: pointer; }
