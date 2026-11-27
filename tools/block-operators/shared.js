@@ -7,11 +7,16 @@ import { registerOutline } from '../../scripts/block-operator-sync.js';
 const TREE_CSS = `
 & { display: block; font: inherit; padding-block: 4px; }
 .bo-tree, .bo-tree ul { list-style: none; margin: 0; padding: 0; }
+/* A guide line from the block's row (its expand chevron) down along all its items */
+.bo-tree {
+  margin-inline-start: 17px; padding-inline-start: 8px;
+  border-inline-start: 1px solid var(--s2-gray-300, #dadada);
+}
 .bo-tree ul {
   margin-inline-start: 11px; padding-inline-start: 18px;
   border-inline-start: 1px solid var(--s2-gray-300, #dadada);
 }
-.bo-node, .bo-head {
+.bo-node {
   display: flex; align-items: baseline; gap: 8px; min-height: 30px; padding: 3px 8px;
   border-radius: 8px; box-sizing: border-box; user-select: none;
 }
@@ -21,8 +26,6 @@ const TREE_CSS = `
 .bo-node.is-selected { background: var(--s2-blue-100, #e5f0fe); }
 .bo-node.is-drop-before { box-shadow: inset 0 2px 0 var(--s2-blue-800, #3b63fb); }
 .bo-node.is-drop-after { box-shadow: inset 0 -2px 0 var(--s2-blue-800, #3b63fb); }
-.bo-head { background: var(--s2-gray-75, #f8f8f8); }
-.bo-head .bo-label { color: var(--s2-blue-900, #3b63fb); }
 .bo-grip {
   align-self: center; width: 12px; flex: none; cursor: grab; letter-spacing: -2px;
   color: var(--s2-gray-400, #c6c6c6); font-size: 12px; line-height: 1;
@@ -30,7 +33,7 @@ const TREE_CSS = `
 .bo-type { flex: none; color: var(--s2-gray-700, #6d6d6d); font-size: 0.85em; }
 .bo-label {
   min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-  color: var(--s2-gray-900, #222); font-size: 1.05em;
+  color: var(--s2-gray-900, #222); font-size: 0.95em;
 }
 .bo-meta { margin-inline-start: auto; color: var(--s2-gray-700, #6d6d6d); font-size: 0.85em; }
 .action-btn { align-self: center; margin-inline-start: auto; opacity: 0; }
@@ -165,7 +168,7 @@ export async function commitHtml(ctx, html, status) {
 export function renderTree(root, nodes, opts) {
   const doc = root.ownerDocument;
   const {
-    selectedId, focusId, editable, onSelect, onMove, onDelete, header,
+    selectedId, focusId, editable, onSelect, onMove, onDelete,
   } = opts;
   const siblingsOf = new Map();
   let dragging = null;
@@ -279,12 +282,7 @@ export function renderTree(root, nodes, opts) {
     ? createElement(doc, 'ul', { class: 'bo-tree', role: 'tree' }, build(nodes))
     : createElement(doc, 'div', { class: 'bo-empty', text: 'No items' });
   const status = createElement(doc, 'div', { class: 'bo-status', role: 'status' });
-  // Optional heading row for the whole block, e.g. `{ type: 'Form', label: 'Event registration' }`.
-  const head = header ? createElement(doc, 'div', { class: 'bo-head' }, [
-    header.type ? createElement(doc, 'span', { class: 'bo-type', text: header.type }) : '',
-    createElement(doc, 'span', { class: 'bo-label', text: header.label || '', title: header.label || '' }),
-  ]) : '';
-  root.replaceChildren(...[head, tree, status].filter(Boolean));
+  root.replaceChildren(tree, status);
   if (focusId != null) root.querySelector(`[data-id="${CSS.escape(focusId)}"]`)?.focus();
   return status;
 }

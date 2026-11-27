@@ -307,12 +307,7 @@ export default {
 
           const render = () => {
             const current = form();
-            const model = current?.model;
-            status = renderTree(root, formItems(model), {
-              header: model && {
-                type: 'Form',
-                label: plainText(model.title || model.label?.value) || model.name || '',
-              },
+            status = renderTree(root, formItems(current?.model), {
               selectedId: state.selectedId,
               focusId,
               editable: state.ctx.editable && !!current,
