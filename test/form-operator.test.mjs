@@ -1,4 +1,4 @@
-// Form operator hooks: describe (chat context) and edit (Layout pencil).
+// Form operator hooks: chat context (setChatContext) and edit (Layout pencil).
 // Run: npm test
 import { test, before } from 'node:test';
 import assert from 'node:assert/strict';
@@ -22,13 +22,22 @@ before(async () => {
   ({ default: operator, INSPECTOR_PANEL } = await import('../tools/block-operators/form.js'));
 });
 
-test('describe returns the field label, summary and JSON', () => {
-  const instance = operator.create(ctx());
-  const described = instance.describe('email');
-  assert.equal(described.label, 'Email');
-  assert.match(described.text, /type email, name email, required/);
-  assert.deepEqual(described.data, model.items[0]);
-  assert.equal(instance.describe('missing'), null);
+test('sets the selected field as chat context and clears it', () => {
+  const chat = [];
+  let report;
+  const instance = operator.create(ctx({
+    surface: undefined,
+    setChatContext: (item) => { chat.push(item); return true; },
+    onEditorSelect: (cb) => { report = cb; return () => {}; },
+  }));
+  report('email');
+  report('email');
+  assert.equal(chat.length, 1);
+  assert.equal(chat[0].label, 'form: Email');
+  assert.match(chat[0].innerText, /type email, name email, required/);
+  assert.ok(chat[0].innerText.includes(JSON.stringify(model.items[0])));
+  report(null);
+  assert.deepEqual(chat.slice(1), [null]);
   instance.destroy();
 });
 

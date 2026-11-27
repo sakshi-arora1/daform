@@ -38,7 +38,6 @@ export default {
       destroy() {},
       resolve(position) {},                      // position in this block → item id, or null
       locate(itemId) {},                         // item id → position in this block, or null
-      describe(itemId) {},                       // optional: { label, text?, data? } for chat context
       edit() {},                                 // optional: the canvas "Edit block" action; true = handled
       outline:   { mount(container) { return { unmount() {} }; } },   // optional
       inspector: { mount(container) { return { unmount() {} }; } },   // optional
@@ -60,11 +59,12 @@ ctx = {
   select(itemId),          // move the selection inside the block to an item (the host calls locate)
   onEditorSelect(cb),      // cb(itemId | null) when the selection moves inside this block (the host calls resolve)
   openPanel(nameOrId),     // DA only: open a tool-panel view, e.g. the Block Inspector → boolean
+  setChatContext(item),    // DA only: { label, innerText } as this block's chat context; null clears
 }
 ```
-**Hooks.** `describe` and `edit` are optional hooks; when an operator doesn't implement them, DA keeps its default
-behaviour. With `describe`, the item selected inside the block is added to the chat (Coworker) context next to the
-block. With `edit`, the operator takes over the canvas "Edit block" action, e.g. to open the Block Inspector through
+**Hook points.** DA only exposes hook points; the behaviour lives in the operator, and without it DA keeps its default.
+With `ctx.setChatContext`, the operator adds what it chooses (e.g. the item selected inside the block) to the chat
+(Coworker) context next to the block. With the optional `edit()` hook, the operator takes over the canvas "Edit block" action, e.g. to open the Block Inspector through
 `ctx.openPanel` instead of the raw block editor.
 
 Each host creates its own operator instance, so an operator must not rely on state shared between hosts.

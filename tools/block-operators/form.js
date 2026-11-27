@@ -202,8 +202,10 @@ export function itemAtOffset(form, textOffset) {
 // Title of the Block Inspector row in the DA config `library` sheet, opened by the Layout pencil.
 export const INSPECTOR_PANEL = 'Block Inspector';
 
-/** Chat context for the item at `pointer`: its label, a short summary and its JSON. */
-export function describeItem(model, pointer) {
+const MAX_CHAT_TEXT = 4000;
+
+/** Coworker chat context for item `itemId` at `pointer`: label, summary and JSON, or null. */
+export function chatContextFor(model, pointer, itemId) {
   const item = pointer && getAt(model, pointer);
   if (!item || typeof item !== 'object') return null;
   const label = plainText(item.label?.value) || item.name || item.fieldType || pointer;
@@ -212,7 +214,11 @@ export function describeItem(model, pointer) {
     item.name && `name ${item.name}`,
     item.required && 'required',
   ].filter(Boolean);
-  return { label, text: `Form field ${label}${facts.length ? ` (${facts.join(', ')})` : ''}.`, data: item };
+  const innerText = [
+    `Selected form field "${label}" (id ${itemId})${facts.length ? `: ${facts.join(', ')}` : ''}.`,
+    JSON.stringify(item),
+  ].join('\n').slice(0, MAX_CHAT_TEXT);
+  return { label: `form: ${label}`, innerText, pinnable: true };
 }
 
 export default {
@@ -224,6 +230,24 @@ export default {
     const form = () => readForm(state.ctx.html);
     const pointerOf = (itemId) => pointerIn(state.ctx, itemId) ?? null;
 
+    // Coworker context: the field under the caret (DA host only; no-op without setChatContext).
+    let chatKey = null;
+    const syncChat = (itemId) => {
+      const { setChatContext } = state.ctx;
+      if (typeof setChatContext !== 'function') return;
+      const current = itemId == null ? null : form();
+      const item = current && chatContextFor(current.model, pointerOf(itemId), itemId);
+      const key = item ? JSON.stringify(item) : null;
+      if (key === chatKey) return;
+      chatKey = key;
+      setChatContext(item);
+    };
+    let selectedItem = null;
+    const unsubscribeChat = initialCtx.onEditorSelect?.((itemId) => {
+      selectedItem = itemId;
+      syncChat(itemId);
+    });
+
     return {
       update(nextCtx) {
         state.ctx = nextCtx;
@@ -231,9 +255,11 @@ export default {
           state.selectedId = null;
         }
         state.refresh();
+        syncChat(selectedItem);
       },
 
       destroy() {
+        unsubscribeChat?.();
         state.destroy();
       },
 
@@ -253,11 +279,6 @@ export default {
         if (!range) return null;
         const { row, cell, base } = current.location;
         return { row, cell, textOffset: base + range.start };
-      },
-
-      describe(itemId) {
-        const current = form();
-        return describeItem(current?.model, formItemIds(current?.model).pointerOf.get(itemId));
       },
 
       // Layout view pencil: edit the form in the Block Inspector instead of as raw JSON.

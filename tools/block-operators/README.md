@@ -42,7 +42,6 @@ export default {
       destroy() {},
       resolve(position) {},                              // position → itemId | null
       locate(itemId) {},                                 // itemId → position | null
-      describe(itemId) {},                               // optional: { label, text?, data? } | null for chat
       edit() {},                                         // optional: Layout pencil; true = handled
       outline:   { mount(container) { return { unmount() {} }; } },   // optional, hosted by DA
       inspector: { mount(container) { return { unmount() {} }; } },   // optional, hosted by Block Inspector
@@ -67,6 +66,7 @@ ctx = {
   onEditorSelect(cb), // cb(itemId | null) when the selection moves in this block; returns unsubscribe
   surface,            // 'inspector' in the Block Inspector; absent in DA
   openPanel(nameOrId),// DA only: open a tool-panel view by id or extension title → boolean
+  setChatContext(item),// DA only: { label, innerText, pinnable? } as this block's chat context; null clears
 }
 ```
 
@@ -76,9 +76,9 @@ DA and the Block Inspector each create their own instance. In DA, `select` moves
 replaces only the operator's own block. Operator UI is mounted in a shadow root that adopts `ctx.styles`; drag and drop
 stays inside the mount.
 
-Optional hooks (DA only; without them DA behaves as before):
-- `describe(itemId)`: when the caret selects an item, DA adds it to the chat (Coworker) context as a separate entry
-  with the label, text and `data` as JSON.
+Hook points (DA only; without them DA behaves as before):
+- `ctx.setChatContext(item | null)`: adds `item` to the chat (Coworker) context as this block's entry; DA fills in
+  the block name and position. The operator decides when and what to send; DA clears it when the instance goes away.
 - `edit()`: called when the Layout view's **Edit block** pencil is clicked for this block. Return `true` to skip DA's
   default (the raw block editor).
 
@@ -105,7 +105,8 @@ Optional hooks (DA only; without them DA behaves as before):
   `textOffset` inside the code to the innermost item whose JSON contains it; `locate` returns the offset of the item's
   opening `{`.
 - `outline`: tree of items (panels nest), reorder within the same parent by drag or Alt+ArrowUp/Down, delete.
-- `describe`: the field's label, a summary (type, name, required) and the field JSON.
+- Chat context: on `onEditorSelect`, the field's label, a summary (type, name, required) and its JSON go to
+  `ctx.setChatContext`; leaving the field clears it.
 - `edit`: opens the Block Inspector (`ctx.openPanel('Block Inspector')`, the extension title in the DA config
   `library` sheet), so the Layout pencil edits the field properties instead of the raw JSON.
 - `inspector` (`form-inspector.js`): the selected item's properties, driven by the Universal Editor component models
