@@ -9,7 +9,7 @@
 import {
   addSurface, commitHtml, createState, moveEntry, mountInto, parseBlock, plainText, renderTree,
 } from './shared.js';
-import { createModelInspector, INSPECTOR_CSS } from './form-inspector.js';
+import { componentTitle, createModelInspector, INSPECTOR_CSS } from './form-inspector.js';
 import { formItemIds } from '../../scripts/block-operator-sync.js';
 
 const ITEM_POINTER = /^(\/items\/\d+)+$/;
@@ -141,7 +141,7 @@ export function formItems(model, ids = formItemIds(model), base = '') {
     return {
       id: ids.idOf.get(pointer),
       label: plainText(item?.label?.value) || item?.name || item?.fieldType || '',
-      meta: item?.fieldType || '',
+      type: componentTitle(item),
       children: formItems(item, ids, pointer),
     };
   });
@@ -307,7 +307,12 @@ export default {
 
           const render = () => {
             const current = form();
-            status = renderTree(root, formItems(current?.model), {
+            const model = current?.model;
+            status = renderTree(root, formItems(model), {
+              header: model && {
+                type: 'Form',
+                label: plainText(model.title || model.label?.value) || model.name || '',
+              },
               selectedId: state.selectedId,
               focusId,
               editable: state.ctx.editable && !!current,

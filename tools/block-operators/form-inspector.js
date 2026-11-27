@@ -43,6 +43,30 @@ const MODEL_FILES = {
 const FALLBACK_FILE = '_text-input.json';
 const FALLBACK_TITLES = { '_multiline-input.json': 'Multiline Input' };
 
+// Titles of the component models (definitions[].title), so the outline can label items without
+// fetching every model.
+const MODEL_TITLES = {
+  '_button.json': 'Button',
+  '_checkbox-group.json': 'Checkbox group',
+  '_checkbox.json': 'Checkbox',
+  '_date-input.json': 'Date Input',
+  '_drop-down.json': 'Dropdown List',
+  '_email.json': 'Email',
+  '_file-input.json': 'File Attachment',
+  '_fragment.json': 'Form Fragment',
+  '_image.json': 'Image',
+  '_multiline-input.json': 'Multiline Input',
+  '_number-input.json': 'Number Input',
+  '_panel.json': 'Panel',
+  '_radio-group.json': 'Radio Group',
+  '_recaptcha.json': 'Captcha (Invisible)',
+  '_reset-button.json': 'Reset',
+  '_submit-button.json': 'Submit',
+  '_telephone-input.json': 'Telephone input',
+  '_text-input.json': 'Text Input',
+  '_text.json': 'Text',
+};
+
 /** Model field name → path in the AF item (as the formeditor's property forms bind them). */
 const PATHS = {
   'jcr:title': ['label', 'value'],
@@ -146,6 +170,11 @@ export function modelFileFor(item) {
     if (item.buttonType === 'reset' || /reset\(/.test(click)) return '_reset-button.json';
   }
   return MODEL_FILES[item?.[':type']] || MODEL_FILES[item?.fieldType] || FALLBACK_FILE;
+}
+
+/** Component title of an item (e.g. "Text Input", "Dropdown List"), as the models name it. */
+export function componentTitle(item) {
+  return MODEL_TITLES[modelFileFor(item)] || item?.fieldType || '';
 }
 
 /** `{ title, fields }` of a component model file, fetched once. */

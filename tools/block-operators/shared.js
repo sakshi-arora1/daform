@@ -5,22 +5,36 @@
 import { registerOutline } from '../../scripts/block-operator-sync.js';
 
 const TREE_CSS = `
-& { display: block; font: inherit; }
+& { display: block; font: inherit; padding-block: 4px; }
 .bo-tree, .bo-tree ul { list-style: none; margin: 0; padding: 0; }
-.bo-tree ul { padding-inline-start: 16px; }
-.bo-node {
-  display: flex; align-items: center; gap: 6px; min-height: 28px; padding: 0 4px;
-  border-radius: 4px; cursor: pointer; user-select: none;
+.bo-tree ul {
+  margin-inline-start: 11px; padding-inline-start: 18px;
+  border-inline-start: 1px solid var(--s2-gray-300, #dadada);
 }
+.bo-node, .bo-head {
+  display: flex; align-items: baseline; gap: 8px; min-height: 36px; padding: 6px 8px;
+  border-radius: 8px; box-sizing: border-box; user-select: none;
+}
+.bo-node { cursor: pointer; }
 .bo-node:hover { background: var(--s2-gray-100, #f3f3f3); }
 .bo-node:focus-visible { outline: 2px solid var(--s2-blue-800, #3b63fb); outline-offset: -2px; }
 .bo-node.is-selected { background: var(--s2-blue-100, #e5f0fe); }
 .bo-node.is-drop-before { box-shadow: inset 0 2px 0 var(--s2-blue-800, #3b63fb); }
 .bo-node.is-drop-after { box-shadow: inset 0 -2px 0 var(--s2-blue-800, #3b63fb); }
-.bo-grip { cursor: grab; color: var(--s2-gray-600, #8f8f8f); }
-.bo-label { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.bo-meta { color: var(--s2-gray-700, #6d6d6d); font-size: 0.85em; }
-.action-btn { opacity: 0; }
+.bo-head { background: var(--s2-gray-75, #f8f8f8); }
+.bo-head .bo-label { color: var(--s2-blue-900, #3b63fb); }
+.bo-grip {
+  align-self: center; width: 12px; flex: none; cursor: grab; letter-spacing: -2px;
+  color: var(--s2-gray-400, #c6c6c6); font-size: 12px; line-height: 1;
+}
+.bo-type { flex: none; color: var(--s2-gray-700, #6d6d6d); font-size: 0.85em; }
+.bo-label {
+  min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  color: var(--s2-gray-900, #222); font-size: 1.05em;
+}
+.bo-meta { margin-inline-start: auto; color: var(--s2-gray-700, #6d6d6d); font-size: 0.85em; }
+.action-btn { align-self: center; margin-inline-start: auto; opacity: 0; }
+.bo-meta + .action-btn { margin-inline-start: 0; }
 .action-btn svg.icon { display: block; width: 16px; height: 16px; }
 .bo-node.is-selected .action-btn, .action-btn:focus-visible,
 .bo-node:hover .action-btn, .bo-node:focus-within .action-btn { opacity: 1; }
@@ -151,7 +165,7 @@ export async function commitHtml(ctx, html, status) {
 export function renderTree(root, nodes, opts) {
   const doc = root.ownerDocument;
   const {
-    selectedId, focusId, editable, onSelect, onMove, onDelete,
+    selectedId, focusId, editable, onSelect, onMove, onDelete, header,
   } = opts;
   const siblingsOf = new Map();
   let dragging = null;
@@ -187,6 +201,7 @@ export function renderTree(root, nodes, opts) {
         ariaSelected: String(selected),
       }, [
         createElement(doc, 'span', { class: 'bo-grip', text: editable ? '⋮⋮' : '', ariaHidden: 'true' }),
+        node.type ? createElement(doc, 'span', { class: 'bo-type', text: node.type }) : '',
         createElement(doc, 'span', { class: 'bo-label', text: label, title: label }),
         node.meta ? createElement(doc, 'span', { class: 'bo-meta', text: node.meta }) : '',
       ]);
@@ -264,7 +279,12 @@ export function renderTree(root, nodes, opts) {
     ? createElement(doc, 'ul', { class: 'bo-tree', role: 'tree' }, build(nodes))
     : createElement(doc, 'div', { class: 'bo-empty', text: 'No items' });
   const status = createElement(doc, 'div', { class: 'bo-status', role: 'status' });
-  root.replaceChildren(tree, status);
+  // Optional heading row for the whole block, e.g. `{ type: 'Form', label: 'Event registration' }`.
+  const head = header ? createElement(doc, 'div', { class: 'bo-head' }, [
+    header.type ? createElement(doc, 'span', { class: 'bo-type', text: header.type }) : '',
+    createElement(doc, 'span', { class: 'bo-label', text: header.label || '', title: header.label || '' }),
+  ]) : '';
+  root.replaceChildren(...[head, tree, status].filter(Boolean));
   if (focusId != null) root.querySelector(`[data-id="${CSS.escape(focusId)}"]`)?.focus();
   return status;
 }
