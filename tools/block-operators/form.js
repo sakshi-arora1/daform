@@ -199,6 +199,22 @@ export function itemAtOffset(form, textOffset) {
   return best;
 }
 
+// Title of the Block Inspector row in the DA config `library` sheet, opened by the Layout pencil.
+export const INSPECTOR_PANEL = 'Block Inspector';
+
+/** Chat context for the item at `pointer`: its label, a short summary and its JSON. */
+export function describeItem(model, pointer) {
+  const item = pointer && getAt(model, pointer);
+  if (!item || typeof item !== 'object') return null;
+  const label = plainText(item.label?.value) || item.name || item.fieldType || pointer;
+  const facts = [
+    item.fieldType && `type ${item.fieldType}`,
+    item.name && `name ${item.name}`,
+    item.required && 'required',
+  ].filter(Boolean);
+  return { label, text: `Form field ${label}${facts.length ? ` (${facts.join(', ')})` : ''}.`, data: item };
+}
+
 export default {
   matches: () => true,
 
@@ -237,6 +253,16 @@ export default {
         if (!range) return null;
         const { row, cell, base } = current.location;
         return { row, cell, textOffset: base + range.start };
+      },
+
+      describe(itemId) {
+        const current = form();
+        return describeItem(current?.model, formItemIds(current?.model).pointerOf.get(itemId));
+      },
+
+      // Layout view pencil: edit the form in the Block Inspector instead of as raw JSON.
+      edit() {
+        return typeof state.ctx.openPanel === 'function' && state.ctx.openPanel(INSPECTOR_PANEL) === true;
       },
 
       outline: {

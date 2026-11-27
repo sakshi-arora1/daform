@@ -42,6 +42,8 @@ export default {
       destroy() {},
       resolve(position) {},                              // position → itemId | null
       locate(itemId) {},                                 // itemId → position | null
+      describe(itemId) {},                               // optional: { label, text?, data? } | null for chat
+      edit() {},                                         // optional: Layout pencil; true = handled
       outline:   { mount(container) { return { unmount() {} }; } },   // optional, hosted by DA
       inspector: { mount(container) { return { unmount() {} }; } },   // optional, hosted by Block Inspector
     };
@@ -64,6 +66,7 @@ ctx = {
   select(itemId),     // select an item: DA moves the caret (locate); the Block Inspector shares it
   onEditorSelect(cb), // cb(itemId | null) when the selection moves in this block; returns unsubscribe
   surface,            // 'inspector' in the Block Inspector; absent in DA
+  openPanel(nameOrId),// DA only: open a tool-panel view by id or extension title → boolean
 }
 ```
 
@@ -72,6 +75,12 @@ DA and the Block Inspector each create their own instance. In DA, `select` moves
 [selection sync](#selection-sync). `ctx.commit` is the only way to change the document and
 replaces only the operator's own block. Operator UI is mounted in a shadow root that adopts `ctx.styles`; drag and drop
 stays inside the mount.
+
+Optional hooks (DA only; without them DA behaves as before):
+- `describe(itemId)`: when the caret selects an item, DA adds it to the chat (Coworker) context as a separate entry
+  with the label, text and `data` as JSON.
+- `edit()`: called when the Layout view's **Edit block** pencil is clicked for this block. Return `true` to skip DA's
+  default (the raw block editor).
 
 ## Contracts
 
@@ -96,6 +105,9 @@ stays inside the mount.
   `textOffset` inside the code to the innermost item whose JSON contains it; `locate` returns the offset of the item's
   opening `{`.
 - `outline`: tree of items (panels nest), reorder within the same parent by drag or Alt+ArrowUp/Down, delete.
+- `describe`: the field's label, a summary (type, name, required) and the field JSON.
+- `edit`: opens the Block Inspector (`ctx.openPanel('Block Inspector')`, the extension title in the DA config
+  `library` sheet), so the Layout pencil edits the field properties instead of the raw JSON.
 - `inspector` (`form-inspector.js`): the selected item's properties, driven by the Universal Editor component models
   in `blocks/form/models/form-components` (fetched from the site; `...` references into `form-common` are resolved).
   The header shows the component title and the item's label; the model's `tab` fields become tabs (Basic,
