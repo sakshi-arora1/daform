@@ -75,7 +75,7 @@ export function createElement(doc, tag, props = {}, children = []) {
 }
 
 /**
- * Open a shadow root inside `container` that adopts the host's nx2 sheets (`ctx.styles`)
+ * Open a shadow root inside `container` that adopts the sheets of the surface it is mounted in
  * plus the operators' own sheet. Returns `{ root, remove }`.
  */
 export function mountShadow(container, styles = []) {
@@ -84,11 +84,15 @@ export function mountShadow(container, styles = []) {
   const host = doc.createElement('div');
   host.className = 'block-operator';
   container.append(host);
+  // Reuse the sheets the host surface already adopted (DA's outline and the Block Inspector
+  // both load the nx2 form/buttons sheets), so nothing is loaded again.
+  const inherited = container.getRootNode().adoptedStyleSheets || [];
   const root = host.attachShadow({ mode: 'open' });
   const own = new view.CSSStyleSheet();
   own.replaceSync(TREE_CSS);
   // Sheets constructed in another document can't be adopted here; skip them.
-  const adoptable = (styles || []).filter((sheet) => sheet instanceof view.CSSStyleSheet);
+  const adoptable = [...new Set([...inherited, ...(styles || [])])]
+    .filter((sheet) => sheet instanceof view.CSSStyleSheet);
   root.adoptedStyleSheets = [...adoptable, own];
   return { root, remove: () => host.remove() };
 }

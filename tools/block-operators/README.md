@@ -59,7 +59,6 @@ ctx = {
   blockIndex,         // index of the block among the document's blocks
   html,               // the block's EDS markup: <div class="name variant"><div><div>…</div></div>…</div>
   editable,           // false when the document is read-only
-  styles,             // nx2 CSSStyleSheets (form.css, buttons.css)
   commit(html),       // replace this block → Promise<{ ok: true } | { ok: false, error, message }>
                       //   error: NOT_EDITABLE | STALE | INVALID_HTML | NO_EDITOR
   select(itemId),     // select an item: DA moves the caret (locate); the Block Inspector shares it
@@ -73,7 +72,7 @@ ctx = {
 DA and the Block Inspector each create their own instance. In DA, `select` moves the caret through `locate`, and
 `onEditorSelect` reports the caret through `resolve`; the surfaces share the selected item through
 [selection sync](#selection-sync). `ctx.commit` is the only way to change the document and
-replaces only the operator's own block. Operator UI is mounted in a shadow root that adopts `ctx.styles`; drag and drop
+replaces only the operator's own block. Operator UI is mounted in a shadow root that reuses the host surface's adopted sheets (nx2 form and buttons); drag and drop
 stays inside the mount.
 
 Hook points (DA only; without them DA behaves as before):

@@ -73,7 +73,7 @@ export default {
 
       outline: {
         mount(container) {
-          const { root, remove } = mountShadow(container, state.ctx.styles);
+          const { root, remove } = mountShadow(container);
           let focusId = null;
           let status;
 

@@ -288,7 +288,7 @@ export default {
 
       outline: {
         mount(container) {
-          const { root, remove } = mountShadow(container, state.ctx.styles);
+          const { root, remove } = mountShadow(container);
           let focusId = null;
           let status;
 
@@ -333,7 +333,7 @@ export default {
           const view = container.ownerDocument.defaultView;
           const sheet = new view.CSSStyleSheet();
           sheet.replaceSync(INSPECTOR_CSS);
-          const { root, remove } = mountShadow(container, [...(state.ctx.styles || []), sheet]);
+          const { root, remove } = mountShadow(container, [sheet]);
           const inspector = createModelInspector(root, {
             getItem: () => {
               const pointer = state.selectedId != null ? pointerOf(state.selectedId) : null;

@@ -55,7 +55,7 @@
   <!-- ctx -->
   <rect x="30" y="490" width="1040" height="66" rx="8" fill="#dafbe1" stroke="#1a7f37" stroke-width="1.5"/>
   <text x="46" y="514" font-weight="600">ctx (same shape from both hosts)</text>
-  <text x="46" y="540" font-family="ui-monospace, Menlo, monospace" font-size="12">name · variant · html · blockIndex · editable · styles · commit(html) · select(itemId) · onEditorSelect(cb)</text>
+  <text x="46" y="540" font-family="ui-monospace, Menlo, monospace" font-size="12">name · variant · html · blockIndex · editable · commit(html) · select(itemId) · onEditorSelect(cb)</text>
   <line x1="280" y1="450" x2="280" y2="486" stroke="#444" stroke-width="1.5" marker-end="url(#a)"/>
   <line x1="820" y1="450" x2="820" y2="486" stroke="#444" stroke-width="1.5" marker-end="url(#a)"/>
 
